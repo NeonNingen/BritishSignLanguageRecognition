@@ -1,3 +1,4 @@
+import os
 from keras import optimizers
 from keras.models import Sequential
 from keras.layers import Convolution2D, MaxPooling2D, Flatten, Dense, Dropout
@@ -7,23 +8,27 @@ Building a CNN Model using keras library
 
 """
 
+# Setting up CNN & Filter
 classifier = Sequential()
 nb_filter = [32, 64]
+
+# Convolution Layer & Pooling
 classifier.add(Convolution2D(nb_filter[0], 3,  3, input_shape = (64, 64, 3),
 	activation = 'relu'))
 classifier.add(MaxPooling2D(pool_size =(2,2)))
 
-
-
+# Adding 2 convolution layers without input shape
 for i in range(0, 1):
 	classifier.add(Convolution2D(nb_filter[i], 3,  3, activation = 'relu'))
 	classifier.add(MaxPooling2D(pool_size =(2,2)))
 
+# Flatterning + Full connection
 classifier.add(Flatten())
 classifier.add(Dense(256, activation = 'relu'))
 classifier.add(Dropout(0.5))
 classifier.add(Dense(4, activation = 'softmax'))
-
+ 
+# Compiling the CNN
 classifier.compile(
 	optimizer = optimizers.SGD(lr = 0.01),
 	loss = 'categorical_crossentropy',
@@ -63,9 +68,7 @@ model = classifier.fit_generator(
 print("Length of training set", len(training_set))
 print("Length of test set", len(test_set))
 
-# Saving the model
-# TODO: Add a check to see if .h5 file exist, if so no need to do this step.
-import h5py
+# Save Model
 classifier.save('Trained_model.h5')
 
 # History of accuracy
