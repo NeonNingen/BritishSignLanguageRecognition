@@ -106,16 +106,6 @@ def webcam_v1(ges_name, path):
 		num_frames += 1
 		cv2.imshow('hs detection', frame_copy) # Display segmented hand
 
-		# Reloop recording gesture
-		if cv2.waitKey(1) == ord('r'):
-			cam.release()
-			cv2.destroyAllWindows()
-
-			ges_name = input("Enter gesture name: ")
-			path = f".\\signs\\training\\{ges_name}"
-			Path(path).mkdir(parents=True, exist_ok=True)
-			webcam(ges_name, path)
-
 		key = cv2.waitKey(1) & 0xFF
 		if key == 27:
 			break

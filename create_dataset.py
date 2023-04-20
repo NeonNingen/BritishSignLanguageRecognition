@@ -17,7 +17,7 @@ ges_name = gesture name
 t_path = training path
 v_path = validation path
 '''
-def webcam(ges_name, t_path, v_path):
+def webcam(t_path, v_path):
     
     taken_counter = 1
     training_set_image_name = 1
@@ -58,7 +58,7 @@ def webcam(ges_name, t_path, v_path):
 
             result = cv2.bitwise_and(imcrop, imcrop, mask=mask)
 
-            cv2.putText(frame, str(taken_counter-1), (30, 400), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (127, 127, 255))
+            cv2.putText(frame, str(taken_counter-1), (30, 400), cv2.FONT_HERSHEY_DUPLEX, 1.5, (127, 127, 255))
             cv2.imshow("Webcam", frame)
             cv2.imshow("mask", mask)
             cv2.imshow("result", result)
@@ -76,9 +76,7 @@ def webcam(ges_name, t_path, v_path):
                         training_set_image_name += 1
 
                     if taken_counter > 350 and taken_counter <= 400:
-                        path = f".\\signs\\validation\\{ges_name}"
-                        Path(v_path).mkdir(parents=True, exist_ok=True)
-                        img_name = f"{path}\\{str(taken_counter)}.jpg"
+                        img_name = f"{v_path}\\{str(taken_counter)}.jpg"
                         cv2.imwrite(img_name, save_img)
                         print("{} written!".format(img_name))
                         val_set_image_name += 1

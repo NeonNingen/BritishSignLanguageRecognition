@@ -4,7 +4,7 @@ from create_dataset_v1 import webcam_v1
 from train_model import train_model
 from detect import detection
 
-model_file = 'Trained_model.h5'
+model_file = 'Trained_model_backup.h5'
 
 # Path Checking
 tr_path = f".\\signs\\training\\"
@@ -32,16 +32,16 @@ while True:
     v_path += ges_name
     
     # Webcam - create_database
-    if user_input == "1":
-        webcam(tr_path, v_path)
-    if user_input == "2":
-        webcam_v1(ges_name, tr_path)
+    # if user_input == "1":
+        # webcam(tr_path, v_path)
+    # if user_input == "2":
+        # webcam_v1(ges_name, tr_path)
         
     # Train model
     # train_model(tr_path, v_path, model_file)
     
     # Test model
-    # detection(te_path + 'hand.jpg', model_file)
+    detection(te_path + 'hand.jpg', model_file)
     
     
     

@@ -7,7 +7,7 @@ from keras.layers import Convolution2D, MaxPooling2D, Flatten, Dense, Dropout
 Building a CNN Model using keras library
 """
 
-def train_model(t_path, v_path):
+def train_model(t_path, v_path, model_path):
     # Setting up CNN & Filter
 	classifier = Sequential()
 	nb_filter = [32, 64]
@@ -70,7 +70,7 @@ def train_model(t_path, v_path):
 	print("Length of val set", len(val_set))
 
 	# Save Model
-	classifier.save('Trained_model.h5')
+	classifier.save(model_path)
 
 	# History of accuracy
 	print(model.history.keys())
