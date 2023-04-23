@@ -1,4 +1,4 @@
-import cv2 # create_database_v2
+import cv2, time # create_database_v2
 import numpy as np
 from pathlib import Path
 
@@ -16,16 +16,18 @@ Setting up the webcam to manipulate the HSV values of an image
 ges_name = gesture name
 t_path = training path
 v_path = validation path
+FOV_left, right, top and down for positiing and the size of the frame
+img_x, img_y = Size of the image when photo taken
 '''
+
 def webcam(t_path, v_path):
     
     taken_counter = 1
     training_set_image_name = 1
-    val_set_image_name = 1
-    list_windows = [1, 2, 3, 4, 5]
+    countdown = 1000
     
     cam = cv2.VideoCapture(0)
-    cv2.namedWindow("frame")
+    time.sleep(1)
     
     cv2.namedWindow("Trackbars")
     cv2.createTrackbar("L - H", "Trackbars", 0, 179, empty)
@@ -35,9 +37,7 @@ def webcam(t_path, v_path):
     cv2.createTrackbar("U - S", "Trackbars", 255, 255, empty)
     cv2.createTrackbar("U - V", "Trackbars", 255, 255, empty)
 
-    for _ in list_windows:
-        while True:
-
+    while countdown > 0:
             _, frame = cam.read()
             frame = cv2.flip(frame, 1) # prevent inverted image
 
@@ -58,42 +58,62 @@ def webcam(t_path, v_path):
 
             result = cv2.bitwise_and(imcrop, imcrop, mask=mask)
 
-            cv2.putText(frame, str(taken_counter-1), (30, 400), cv2.FONT_HERSHEY_DUPLEX, 1.5, (127, 127, 255))
-            cv2.imshow("Webcam", frame)
+            #cv2.putText colour is BGR
+            cv2.putText(frame, 
+            "The timer will countdown allowing you to",
+            (10, 30), cv2.FONT_HERSHEY_DUPLEX, 0.9, (0, 102, 255))
+            
+            cv2.putText(frame, 
+            "readjust your hand. Adjust the trackbars",
+            (10, 55), cv2.FONT_HERSHEY_DUPLEX, 0.9, (0, 102, 255))
+            
+            cv2.putText(frame, 
+            "to get desired results",
+            (10, 85), cv2.FONT_HERSHEY_DUPLEX, 0.9, (0, 102, 255))
+            
+            cv2.putText(frame,  str(countdown), (30, 440), 
+            cv2.FONT_HERSHEY_DUPLEX, 0.8, (127, 127, 255))
+            
+            cv2.imshow("Countdown", frame)
             cv2.imshow("mask", mask)
             cv2.imshow("result", result)
+            
+            cv2.waitKey(10)
+            countdown -= 1
 
-            if cv2.waitKey(1) == ord('c'):
-                
-                while taken_counter < 401:
+            if cv2.waitKey(1) == 27:
+                cam.release()
+                cv2.destroyAllWindows()
+                return 0
+            
+    # Creates folders for the newly added gestures
+    paths = [t_path, v_path]
+    for path in paths:
+        Path(path).mkdir(parents=True, exist_ok=True)
+            
+    while taken_counter < 401:
+        
+        if taken_counter <= 350:
+            img_name = f"{t_path}\\{str(taken_counter)}.jpg"
+            save_img = cv2.resize(mask, (img_x, img_y))
+            cv2.imwrite(img_name, save_img)
+            print(f"{img_name} written!")
+            training_set_image_name += 1
+            
+        if taken_counter > 350 and taken_counter <= 400:
+            img_name = f"{v_path}\\{str(taken_counter)}.jpg"
+            cv2.imwrite(img_name, save_img)
+            print(f"{img_name} written!")
                     
-                    if taken_counter <= 350:
-                        
-                        img_name = f"{t_path}\\{str(taken_counter)}.jpg"
-                        save_img = cv2.resize(mask, (img_x, img_y))
-                        cv2.imwrite(img_name, save_img)
-                        print("{} written!".format(img_name))
-                        training_set_image_name += 1
-
-                    if taken_counter > 350 and taken_counter <= 400:
-                        img_name = f"{v_path}\\{str(taken_counter)}.jpg"
-                        cv2.imwrite(img_name, save_img)
-                        print("{} written!".format(img_name))
-                        val_set_image_name += 1
-                        if val_set_image_name > 250:
-                            break
-                        
-                    taken_counter += 1
-                    if taken_counter == 401:
-                        taken_counter = 1
-                break
-
-            elif cv2.waitKey(1) == 27:
-                break
-
-        if val_set_image_name > 250:
+                    
+        taken_counter += 1
+        if taken_counter == 401:
             break
-
-
+                    
     cam.release()
     cv2.destroyAllWindows()
+    
+    if taken_counter == 401:
+        return 1
+    else:
+        return 0
