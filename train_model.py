@@ -61,7 +61,7 @@ def train_model(t_path, v_path, model_path):
 	model = classifier.fit_generator(
 		training_set,
 		steps_per_epoch= len(training_set),
-		epochs=dir_amount * 4,
+		epochs= dir_amount * 4,
 		validation_data = val_set,
 		validation_steps = len(val_set)
 	)
@@ -81,13 +81,19 @@ def train_model(t_path, v_path, model_path):
 	plt.ylabel('accuracy')
 	plt.xlabel('epoch')
 	plt.legend(['train', 'val'], loc = 'upper left')
-	plt.show()
-
-	# History of loss
+	plt.savefig('./signs/graphs/acc_plot.jpg')
+	plt.clf()
+ 	#plt.show()
+ 
+ 
+ 	# History of loss
 	plt.plot(model.history['loss'])
 	plt.plot(model.history['val_loss'])
 	plt.title('model loss')
 	plt.ylabel('loss')
 	plt.xlabel('epoch')
 	plt.legend(['train', 'val'], loc = 'upper left')
-	plt.show()
+	plt.savefig('./signs/graphs/loss_plot.jpg')
+ 	#plt.show()
+  
+	return True

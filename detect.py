@@ -1,6 +1,8 @@
 import cv2
+import tensorflow as tf
 import numpy as np
-from test_model import predict
+#from test_model import predict
+from time import sleep
 
 def empty(x): pass
 
@@ -11,7 +13,29 @@ FOV_bottom = 400
 
 img_x, img_y = 64, 64
 
-def detection(img_name, model_file):
+
+def predict(model_path):
+    # Load the trained model
+    model = tf.keras.models.load_model(model_path)
+
+    test_image = tf.keras.preprocessing.image.load_img('./signs/test/hand.jpg', target_size=(64, 64))
+    test_image = tf.keras.preprocessing.image.img_to_array(test_image)
+    test_image = np.expand_dims(test_image, axis = 0)
+    result = model.predict(test_image)
+
+    if result[0][0] == 1:
+            return 'A'
+    elif result[0][1] == 1:
+            return 'B'
+    elif result[0][2] == 1:
+            return 'C'
+    elif result[0][3] == 1:
+            return 'D'
+    elif result[0][4] == 1:
+            return 'E'
+
+
+def detection(img_name, model_file):    
     cam = cv2.VideoCapture(0)
     
     cv2.namedWindow("Trackbars")
