@@ -50,13 +50,16 @@ print("Sign Language Recognizer Program")
 while True:
     print("Please select the listed options:" 
     +"\n1) Add gestures\n2) Train\n3) Recognise\nAny other key to Exit")
-    user_input = input("Pick an option: ")
+    #user_input = input("Pick an option: ")
+    user_input = '3'
     
     if user_input == "1":
         gesture_add(tr_path, v_path)
     elif user_input == "2":
         train_model(tr_path, v_path, model_file)
     elif user_input == "3":
-        detection(te_path + 'hand.jpg', model_file)
+        phrase = detection(te_path + 'hand.jpg', model_file)
+        print(phrase)
+        break
     else:
         break

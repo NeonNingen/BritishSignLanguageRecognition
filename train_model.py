@@ -14,13 +14,13 @@ def train_model(t_path, v_path, model_path):
 	dir_amount = len(next(os.walk(t_path))[1])
 
 	# Convolution Layer & Pooling
-	classifier.add(Convolution2D(nb_filter[0], 3,  3, input_shape = (64, 64, 3),
+	classifier.add(Convolution2D(nb_filter[0], 3, 3, input_shape = (64,64,3),
 		activation = 'relu'))
 	classifier.add(MaxPooling2D(pool_size =(2,2)))
 
 	# Adding 2 convolution layers without input shape
 	for i in range(0, 1):
-		classifier.add(Convolution2D(nb_filter[i], 3,  3, activation = 'relu'))
+		classifier.add(Convolution2D(nb_filter[i], 3, 3, activation = 'relu'))
 		classifier.add(MaxPooling2D(pool_size =(2,2)))
 
 	# Flatterning + Full connection

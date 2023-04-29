@@ -6,3 +6,5 @@ keras
 opencv-python
 pyttsx3
 PyQt5
+PyMsgBox
+gTTS
