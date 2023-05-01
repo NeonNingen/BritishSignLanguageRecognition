@@ -71,9 +71,12 @@ def webcam():
             (10, 85), cv2.FONT_HERSHEY_DUPLEX, 0.9, (0, 102, 255))
             
             cv2.putText(frame, 
-            "Recommend adjusting only L - V for training (First countdown)\n"+
+            "Recommend adjusting only L - V for training (First countdown)\n",
+            (10, 115), cv2.FONT_HERSHEY_DUPLEX, 0.6, (0, 102, 255))
+            
+            cv2.putText(frame, 
             "then only L - S for validation (Second countdown)",
-            (10, 105), cv2.FONT_HERSHEY_DUPLEX, 0.8, (0, 102, 255))
+            (10, 145), cv2.FONT_HERSHEY_DUPLEX, 0.7, (0, 102, 255))
             
             cv2.putText(frame,  str(countdown), (30, 440), 
             cv2.FONT_HERSHEY_DUPLEX, 0.8, (127, 127, 255))
@@ -88,7 +91,7 @@ def webcam():
             if cv2.waitKey(1) == 27:
                 cam.release()
                 cv2.destroyAllWindows()
-                return 0
+                return mask
         
     cam.release()
     cv2.destroyAllWindows()
@@ -121,13 +124,14 @@ def capture(t_path, v_path):
         
     taken_counter == 351
     pymsgbox.alert("Creating new capture for validation",
-                   "Validation data capture", timeout=1000)
-    webcam()
+                   "Validation data capture", timeout=2000)
+    mask = webcam()
         
     while taken_counter < 401:
             
         if taken_counter > 350 and taken_counter <= 400:
             img_name = f"{v_path}\\{str(taken_counter)}.jpg"
+            save_img = cv2.resize(mask, (img_x, img_y))
             cv2.imwrite(img_name, save_img)
             print(f"{img_name} written!")
                     

@@ -1,4 +1,4 @@
-import cv2, pymsgbox
+import cv2, pymsgbox, os
 import tensorflow as tf
 import numpy as np
 
@@ -15,20 +15,18 @@ def predict(model_path):
     test_image = tf.keras.preprocessing.image.img_to_array(test_image)
     test_image = np.expand_dims(test_image, axis = 0)
     result = model.predict(test_image)
-
-    if result[0][0] == 1:
-            return 'A'
-    elif result[0][1] == 1:
-            return 'B'
-    elif result[0][2] == 1:
-            return 'C'
-    elif result[0][3] == 1:
-            return 'D'
-    elif result[0][4] == 1:
-            return 'E'
+    
+    folder = './signs/training'
+    sub_folders = [name.upper() for name in os.listdir(folder) if os.path.isdir(os.path.join(folder, name))]
+    
+    for i in range(len(sub_folders)):
+            if result[0][i] == 1:
+                    return sub_folders[i]
 
 
-def detection(img_name, model_file, state=False, countdown=0):
+def detection(img_name, model_file, state=False, countdown=0,
+              lh_value=0, ls_value=0, lv_value=0):
+        
         FOV_left = 425 # FOV = Frame Of View
         FOV_right = 625
         FOV_top = 200
@@ -36,13 +34,11 @@ def detection(img_name, model_file, state=False, countdown=0):
 
         img_x, img_y = 64, 64
         cam = cv2.VideoCapture(0)
-        
-        #time.sleep(1)
     
         cv2.namedWindow("Trackbars")
-        cv2.createTrackbar("L - H", "Trackbars", 0, 179, empty)
-        cv2.createTrackbar("L - S", "Trackbars", 0, 255, empty)
-        cv2.createTrackbar("L - V", "Trackbars", 0, 255, empty)
+        cv2.createTrackbar("L - H", "Trackbars", lh_value, 179, empty)
+        cv2.createTrackbar("L - S", "Trackbars", ls_value, 255, empty)
+        cv2.createTrackbar("L - V", "Trackbars", lv_value, 255, empty)
         cv2.createTrackbar("U - H", "Trackbars", 179, 179, empty)
         cv2.createTrackbar("U - S", "Trackbars", 255, 255, empty)
         cv2.createTrackbar("U - V", "Trackbars", 255, 255, empty)
@@ -140,7 +136,8 @@ def detection(img_name, model_file, state=False, countdown=0):
                 
         if state == True:
                 detection(img_name, model_file, state=state,
-                          countdown=50)
+                          countdown=100, lh_value=l_h,
+                          lv_value=l_v, ls_value=l_s)
         else:
                 cam.release()
                 cv2.destroyAllWindows()

@@ -12,6 +12,13 @@ def train_model(t_path, v_path, model_path):
 	classifier = Sequential()
 	nb_filter = [32, 64]
 	dir_amount = len(next(os.walk(t_path))[1])
+	# Epoch has to be adjusted based on amount of gestures to prevent overfitting
+	if dir_amount < 6:
+		epoch = dir_amount * 4
+	elif dir_amount < 12:
+		epoch = dir_amount * 3
+	else:
+		epoch = dir_amount * 2
 
 	# Convolution Layer & Pooling
 	classifier.add(Convolution2D(nb_filter[0], 3, 3, input_shape = (64,64,3),
@@ -35,7 +42,7 @@ def train_model(t_path, v_path, model_path):
 		loss = 'categorical_crossentropy',
 		metrics = ['accuracy'])
 
-	#Part 2 Fittting the CNN to the image
+	#Part 2 Fitting the CNN to the image
 	from keras.preprocessing.image import ImageDataGenerator
 	train_datagen = ImageDataGenerator(
 		rescale = 1./255,
@@ -44,7 +51,8 @@ def train_model(t_path, v_path, model_path):
 		horizontal_flip = True)
 
 	val_datagen = ImageDataGenerator(rescale=1./255)
-
+ 
+	# Creating Training and Validation datasets
 	training_set = train_datagen.flow_from_directory(
 		t_path,
 		target_size = (64,64),
@@ -58,10 +66,11 @@ def train_model(t_path, v_path, model_path):
     	class_mode='categorical'
 	)
 
-	model = classifier.fit_generator(
+	# Training the model
+	model = classifier.fit(
 		training_set,
 		steps_per_epoch= len(training_set),
-		epochs= dir_amount * 4,
+		epochs= epoch,
 		validation_data = val_set,
 		validation_steps = len(val_set)
 	)
