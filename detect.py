@@ -136,7 +136,7 @@ def detection(img_name, model_file, state=False, countdown=0,
                 
         if state == True:
                 detection(img_name, model_file, state=state,
-                          countdown=100, lh_value=l_h,
+                          countdown=500, lh_value=l_h,
                           lv_value=l_v, ls_value=l_s)
         else:
                 cam.release()

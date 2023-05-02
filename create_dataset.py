@@ -21,7 +21,7 @@ img_x, img_y = Size of the image when photo taken
 '''
 
 def webcam():
-    countdown = 300
+    countdown = 1000
     
     cam = cv2.VideoCapture(0)
     time.sleep(1)
