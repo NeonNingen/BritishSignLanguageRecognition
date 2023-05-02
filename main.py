@@ -168,7 +168,9 @@ class TrainModel(QWidget):
         self.label.move(20, 50)
         self.label2.move(20, 120)
         self.label3.move(570, 700)
-        self.start.move(400, 730)
+        self.label3.move(300, 470)
+        self.start.move(300, 730)
+        self.back.move(500, 730)
         self.label_png.move(0, 200)
         self.label2_png.move(650, 200)
         

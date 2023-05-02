@@ -21,14 +21,14 @@ img_x, img_y = Size of the image when photo taken
 '''
 
 def webcam():
-    countdown = 1000
+    countdown = 300
     
     cam = cv2.VideoCapture(0)
     time.sleep(1)
     
     cv2.namedWindow("Trackbars")
     cv2.createTrackbar("L - H", "Trackbars", 0, 179, empty)
-    cv2.createTrackbar("L - S", "Trackbars", 0, 255, empty)
+    cv2.createTrackbar("L - S", "Trackbars", 56, 255, empty)
     cv2.createTrackbar("L - V", "Trackbars", 0, 255, empty)
     cv2.createTrackbar("U - H", "Trackbars", 179, 179, empty)
     cv2.createTrackbar("U - S", "Trackbars", 255, 255, empty)

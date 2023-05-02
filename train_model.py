@@ -12,13 +12,6 @@ def train_model(t_path, v_path, model_path):
 	classifier = Sequential()
 	nb_filter = [32, 64]
 	dir_amount = len(next(os.walk(t_path))[1])
-	# Epoch has to be adjusted based on amount of gestures to prevent overfitting
-	if dir_amount < 6:
-		epoch = dir_amount * 4
-	elif dir_amount < 12:
-		epoch = dir_amount * 3
-	else:
-		epoch = dir_amount * 2
 
 	# Convolution Layer & Pooling
 	classifier.add(Convolution2D(nb_filter[0], 3, 3, input_shape = (64,64,3),
@@ -70,7 +63,7 @@ def train_model(t_path, v_path, model_path):
 	model = classifier.fit(
 		training_set,
 		steps_per_epoch= len(training_set),
-		epochs= epoch,
+		epochs= dir_amount * 4,
 		validation_data = val_set,
 		validation_steps = len(val_set)
 	)
